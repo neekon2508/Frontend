@@ -1,0 +1,121 @@
+
+@Configuration
+@EnableWebSocketMessageBroker
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws-chat").withSockJS();
+    }
+
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+       registry.setApplicationDestinationPrefixes("/app");
+       registry.enableSimpleBroker("/topic");
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+}
+
+@Controller
+public class ChatController {
+
+    private final List<EmailDTO> messages = new ArrayList<>();
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+
+    @MessageMapping("/sendMessage")
+    public void sendMessage(EmailDTO emailDTO) {
+        messages.add(emailDTO);
+       messagingTemplate.convertAndSend ("/topic/messages/"+emailDTO.getReceiverId(), emailDTO);
+    }
+    @GetMapping("api/messages/{userId}")
+    @ResponseBody
+    public List<EmailDTO> getMessagesForUser(@PathVariable Integer userId) {
+            return messages.stream()
+                .filter(m->m.getReceiverId()==userId )
+                .collect(Collectors.toList());
+    }
+
+
+}
+let stompClient;
+        let username;
+       
+        function connect() {
+            const socket = new SockJS('/ws-chat');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                console.log("Da ket noi", frame);
+                stompClient.subscribe('/topic/messages/'+userId, function (message) {
+                    let msg = JSON.parse(message.body);
+                    showMessage(msg);
+                });
+
+                fetch('/api/messages/'+userId)
+                .then(res=>res.json())
+                .then(data=>{
+                    data.forEach(m=>showMessage(m));
+                });
+            });
+        }
+        window.onload = function () {
+            connect();
+        }
+        function showMessage(msg) {
+           
+            
+            const chat = document.getElementById('inbox');
+            const p = document.createElement('p');
+            
+            p.innerHTML = `
+                <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h5 class="card-title mb-1">${msg.subject}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">From: ${userMap[msg.senderId]?.username || 'Unknown'}</h6>
+                    </div>
+                    <form action="/emails/delete/${msg.id}" method="post">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                    </div>
+                    <p class="card-text mt-3">${msg.body}</p>
+                </div>
+                </div>
+                `;
+
+            chat.appendChild(p);
+            let emailCount = document.getElementById('emailCount').value;
+            emailCount++;
+            document.getElementById('emailCount').innerText = emailCount;
+        }
+        function sendMessage() {
+        
+            const subject = document.querySelector('input[name="subject"]').value;
+
+            const body = document.querySelector('textarea[name="body"]').value;
+
+            const selectedUserIds = Array.from(document.querySelectorAll('input[name="userIds"]:checked'))
+                                .map(checkbox => checkbox.value);
+            if (selectedUserIds.length === 0) {
+                alert("Vui lòng chọn ít nhất một người nhận.");
+                return;
+            }
+            const message = {
+                senderId: userId,
+                receiverId: selectedUserIds[0],
+                subject: subject,
+                body: body
+            };
+            stompClient.send("/app/sendMessage",{},JSON.stringify(message));
+            document.querySelector('input[name="subject"]').value='';
+
+            document.querySelector('textarea[name="body"]').value='';
+            
+        }
+        </script>
