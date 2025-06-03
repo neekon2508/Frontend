@@ -27,3 +27,12 @@ elSubTotal.textContent = '$' + shipping;
 
 elSubTotal = document.getElementById('grandTotal');
 elSubTotal.textContent = '$' + grandTotal;
+
+var hotel = {
+    name: 'Park',
+    rooms: 120,
+    booked: 77,
+};
+hotel.gym = true;
+hotel.pool = false;
+delete hotel.booked;
