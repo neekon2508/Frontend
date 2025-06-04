@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="sample/c05/css/c05.css">
+</head>
+<body>
+    <ul
+        ><li id="one" class="hot"><em>fresh</em> figs</li
+        ><li id="two" class="hot">pine nuts</li
+        ><li id="three" class="hot">honey</li
+        ><li id="four">balsamic vinegar</li
+    ></ul>
+    
+    <script>
+        var newEl = document.createElement('li');
+        var newText = document.createTextNode('quinoa');
+        newEl.appendChild(newText);
+        var position = document.getElementsByTagName('ul')[0];
+        position.appendChild(newEl);
+
+    </script>
+</body>
+</html>
