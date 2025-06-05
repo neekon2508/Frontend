@@ -13,6 +13,7 @@
         ><li id="three" class="hot">honey</li
         ><li id="four">balsamic vinegar</li
     ></ul>
+    <div id="scriptResults"></div>
     
     <script>
         var newEl = document.createElement('li');
@@ -21,6 +22,13 @@
         var position = document.getElementsByTagName('ul')[0];
         position.appendChild(newEl);
 
+        var removeEl = document.getElementsByTagName('li')[3];
+        var containerEl = removeEl.parentNode;
+        containerEl.removeChild(removeEl);
+
+        var firstItem = document.getElementById('one');
+        if (firstItem.hasAttribute('class')) 
+            firstItem.removeAttribute('class');
     </script>
 </body>
 </html>
