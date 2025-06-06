@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="sample/c06/css/c06.css">
 </head>
 <body>
     <form action="#" method="post">
@@ -18,30 +19,22 @@
     </form>
 
     <script>
-    function checkUsername(e, minLength) { 
-        var el, elMsg; 
-        if (!e) { 
-        e = window.event; 
-        } 
-        el = e.target || e.srcElement; 
-        elMsg = el.nextSibling; 
-        if (el.value.length < minLength) { 
-        elMsg. innerHTML = 'Username must be ' + minLength + ' characters or more'; 
-        } else { 
-        elMsg.innerHTML = ''; 
-        } 
+    function checkUsername() { 
+        var username = el.value;
+        if (username.length < 5) {
+            elMsg.className = 'warning';
+            elMsg.textContent = 'Not long enough';
+        } else
+            elMsg.textContent = '';
     }    
-
-    var elUsername = document.getElementById('username');// Get username input 
-    if (elUsername.addEventListener) { // Modern browsers
-        elUsername.addEventListener('blur', function(e) { 
-        checkUsername(e, 5); 
-        }, false); 
-    } else { //For IE8 and below
-    elUsername.attachEvent('onblur', function(e) { 
-    checkUsername(e, 5); 
-    }); 
+    function tipUsername() {
+        elMsg.className = 'tip';
+        elMsg.innerHTML = 'Username must be at least 5 characters';
     }
+    var el = document.getElementById('username');
+    var elMsg = document.getElementById('feedback');
+    el.addEventListener('focus', tipUsername, false);
+    el.addEventListener('blur', checkUsername, false);
     
     </script>
 </body>
