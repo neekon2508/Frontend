@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul id="shoppingList">
+        <li class="complete"><a href="#"><em>figs</em></a></li>
+        <li class="complete"><a href="#">pine nuts</a></li>
+        <li class="complete"><a href="#">honey</a></li>
+        <li class="complete"><a href="#">balsamic vinegar</a></li>
+    </ul>
+    <script>
+        function getTarget(e) {
+            if(!e)
+                e = window.event;
+            return e.target || e.srcElement;
+        }
+        function itemDone(e) {
+            var target, elParent, elGrandparent;
+            target = getTarget(e);
+            elParent = target.parentNode;
+            elGrandparent = target.parentNode.parentNode;
+            elGrandparent.removeChild(elParent);
+
+            if(e.preventDefault)
+                e.preventDefault();
+            else
+                e.returnValue = false;
+        }
+
+        var el = document.getElementById('shoppingList');
+        if (el.addEventListener)
+            el.addEventListener('click', function(e) {itemDone(e);}, false);
+        else 
+            el.attachEvent('onClick', function(e){itemDone(e);});
+    </script>
+</body>
+</html>

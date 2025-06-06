@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="#" method="post">
+        <label for="username">Create a username: </label
+        ><input type="text" id="username"
+        ><div id="feedback"></div>
+
+        <label for="password">Create a password: </label>
+        <input type="password" id="password">
+
+        <input type="submit" value="Sign up!">
+    </form>
+
+    <script>
+    function checkUsername(e, minLength) { 
+        var el, elMsg; 
+        if (!e) { 
+        e = window.event; 
+        } 
+        el = e.target || e.srcElement; 
+        elMsg = el.nextSibling; 
+        if (el.value.length < minLength) { 
+        elMsg. innerHTML = 'Username must be ' + minLength + ' characters or more'; 
+        } else { 
+        elMsg.innerHTML = ''; 
+        } 
+    }    
+
+    var elUsername = document.getElementById('username');// Get username input 
+    if (elUsername.addEventListener) { // Modern browsers
+        elUsername.addEventListener('blur', function(e) { 
+        checkUsername(e, 5); 
+        }, false); 
+    } else { //For IE8 and below
+    elUsername.attachEvent('onblur', function(e) { 
+    checkUsername(e, 5); 
+    }); 
+    }
+    
+    </script>
+</body>
+</html>
