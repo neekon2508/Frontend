@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="sample/c06/css/c06.css">
+</head>
+<body>
+    <div id="page">
+      <h1>List King</h1>
+      <form method="post" action="http://www.example.org/register" id="formSignup">
+        <h2>Membership</h2>
+
+        <label for="package" class="selectbox"> Select a package: </label>
+        <select id="package">
+          <option value="annual">1 year ($50)</option>
+          <option value="monthly">1 month ($5)</option>
+        </select>
+        <div id="packageHint" class="tip"></div>
+
+        <input type="checkbox" id="terms" />
+        <label for="terms" class="checkbox"> Check to agree to terms &amp; conditions</label>
+        <div id="termsHint" class="warning"></div>
+
+        <input type="submit" value="next" />
+
+        </form>
+      </div>
+      <script>
+        var elForm, elSelectPackage, elPackageHint, elTerms, elTermsHint;
+        elForm = document.getElementById('formSignup');
+        elSelectPackage = document.getElementById('package');
+        elPackageHint = document.getElementById('packageHint');
+        elTerms = document.getElementById('terms');
+        elTermsHint = document.getElementById('termsHint');
+        function packageHint() {
+            var package = this.options[this.selectedIndex].value;
+            if (package == 'monthly')
+                elPackageHint.innerHTML = 'Save $10 if you pay for 1 year!';
+            else 
+                elPackageHint.innerHTML = 'Wise choice!';
+        }
+        function checkTerms(event) {
+            if (!elTerms.checked) {
+                elTermsHint.innerHTML = 'You must agree to the terms';
+                event.preventDefault();
+            }
+        } 
+        elForm.addEventListener('submit', checkTerms, false);
+        elSelectPackage.addEventListener('change', packageHint, false);
+      </script>
+</body>
+</html>

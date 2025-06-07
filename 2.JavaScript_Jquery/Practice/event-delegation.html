@@ -4,8 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="sample/c06/css/c06.css">
+    <style>
+         *{
+            padding: 0px;
+            margin: 0px;
+         }
+        .table1 {
+            display:inline-block;
+            display: 100px;
+          
+        }
+    </style>
 </head>
 <body>
+    <ul>
+        <li class='table1'>
+             <input type="text" id="sx">
+        </li>
+        <li class='table1'>
+             <input type="text" id="sy">            
+        </li>
+        <li class='table1'>
+             <input type="text" id="px">            
+        </li>
+        <li class='table1'>
+             <input type="text" id="py">            
+        </li>
+        <li class='table1'>
+             <input type="text" id="cx">            
+        </li>
+        <li class='table1'>
+             <input type="text" id="cy">            
+        </li>
+        
+    </ul>
     <ul id="shoppingList">
         <li class="complete"><a href="#"><em>figs</em></a></li>
         <li class="complete"><a href="#">pine nuts</a></li>
@@ -36,6 +69,24 @@
             el.addEventListener('click', function(e) {itemDone(e);}, false);
         else 
             el.attachEvent('onClick', function(e){itemDone(e);});
+
+        var sx = document.getElementById('sx');
+        var sy = document.getElementById('sy');
+        var px = document.getElementById('px');
+        var py = document.getElementById('py');
+        var cx = document.getElementById('cx');
+        var cy = document.getElementById('cy');
+        function showPosition(event) {
+            sx.value = 'screenX '+event.screenX;
+            sy.value = 'screenY '+event.screenY;
+            px.value = 'pageX '+event.pageX;
+            py.value = 'pageY '+event.pageY;
+            cx.value = 'clientX '+event.clientX;
+            cy.value = 'clientY '+event.clientY;
+        }
+        var er = document.querySelector('body');
+        er.addEventListener('mousemove', function() {showPosition(event);}, false);
+
     </script>
 </body>
 </html>
