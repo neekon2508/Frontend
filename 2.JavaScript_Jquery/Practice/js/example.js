@@ -1,38 +1,60 @@
-var greeting = 'Howdy ';
-var name = 'Molly';
-var message = ', please check your order: ';
+var noteInput, noteName, textEntered, target;    // Declare variables
 
-var welcome = greeting + name + message;
+noteName = document.getElementById('noteName');  // Element that holds note
+noteInput = document.getElementById('noteInput');// Input for writing the note
 
-var sign = 'Montague House';
-var tiles = sign.length;
-var subTotal = tiles * 5;
-var shipping = 7;
-var grandTotal = subTotal * shipping;
+function writeLabel(e) {                         // Declare function
+  if (!e) {                                      // If event object not present
+    e = window.event;                            // Use IE5-8 fallback
+  }
+  target = e.target || e.srcElement;             // Get target of event
+  textEntered = target.value;                    // Value of that element
+  noteName.textContent = textEntered;            // Update note text
+}
 
-var el = document.getElementById('greeting');
-el.innerHTML = welcome;
 
-var elSign = document.getElementById('userSign');
-elSign.textContent = sign;
+function recorderControls(e) {                   // Declare recorderControls()
+  if (!e) {                                      // If event object not present
+    e = window.event;                            // Use IE5-8 fallback
+  }
+  target = e.target || e.srcElement;             // Get the target element
+  if (e.preventDefault) {                        // If preventDefault() supported
+    e.preventDefault();                          // Stop default action
+  } else {                                       // Otherwise
+    e.returnValue = false;                       // IE fallback: stop default action
+  }
 
-var elTiles = document.getElementById('tiles');
-elTiles.textContent = tiles;
+  switch(target.getAttribute('data-state')) {    // Get the data-state attribute
+    case 'record':                               // If its value is record
+      record(target);                            // Call the record() function
+      break;                                     // Exit function to where called
+    case 'stop':                                 // If its value is stop
+      stop(target);                              // Call the stop() function
+      break;                                     // Exit function to where called
+      // More buttons could go here...
+  }
+}
 
-var elSubTotal = document.getElementById('subTotal');
-elSubTotal.textContent = '$' + subTotal;
+function record(target) {                        // Declare function
+  target.setAttribute('data-state', 'stop');     // Set data-state attr to stop
+  target.textContent = 'stop';                   // Set text to 'stop'
+}
 
-elSubTotal = document.getElementById('shipping');
-elSubTotal.textContent = '$' + shipping;
+function stop(target) {
+  target.setAttribute('data-state', 'record');   //Set data-state attr to record
+  target.textContent = 'record';                 // Set text to 'record'
+}
 
-elSubTotal = document.getElementById('grandTotal');
-elSubTotal.textContent = '$' + grandTotal;
-
-var hotel = {
-    name: 'Park',
-    rooms: 120,
-    booked: 77,
-};
-hotel.gym = true;
-hotel.pool = false;
-delete hotel.booked;
+if (document.addEventListener) {                 // If event listener supported
+  document.addEventListener('click', function(e) {// For any click document
+    recorderControls(e);                         // Call recorderControls()
+  }, false);                                     // Capture during bubble phase
+  // If input event fires on noteInput input call writeLabel()
+  noteInput.addEventListener('input', writeLabel, false); 
+} else {                                         // Otherwise
+  document.attachEvent('onclick', function(e) {  // IE fallback: any click
+    recorderControls(e);                         // Calls recorderControls()
+  });
+ // If keyup event fires on noteInput call writeLabel()
+  noteInput.attachEvent('onkeyup', writeLabel);
+}

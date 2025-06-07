@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="sample/c06/css/c06.css">
+</head>
+<body>
+    <div id="page">
+      <h1>List King</h1>
+      <h2>Profile</h2>
+      <form id="messageForm" action="http://example.org/">
+
+        <textarea id="message"></textarea>
+        <input type="submit" value="next" />
+
+      </form>
+    </div>
+    <script>
+        function setup() {
+            var textInput;
+            textInput = document.getElementById('message');
+            textInput.focus();
+        }
+        window.addEventListener('DOMContentLoaded', setup, false);
+        window.addEventListener('beforeunload', function(event){
+            return 'You have changes that have not been saved...';
+        }, false);
+    </script>
+</body>
+</html>
