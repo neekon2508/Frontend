@@ -1,60 +1,60 @@
-var noteInput, noteName, textEntered, target;    // Declare variables
+$(function() {
 
-noteName = document.getElementById('noteName');  // Element that holds note
-noteInput = document.getElementById('noteInput');// Input for writing the note
+  // SETUP
+  var $list, $newItemForm, $newItemButton;
+  var item = '';                                 // item is an empty string
+  $list = $('ul');                               // Cache the unordered list
+  $newItemForm = $('#newItemForm');              // Cache form to add new items
+  $newItemButton = $('#newItemButton');          // Cache button to show form
 
-function writeLabel(e) {                         // Declare function
-  if (!e) {                                      // If event object not present
-    e = window.event;                            // Use IE5-8 fallback
-  }
-  target = e.target || e.srcElement;             // Get target of event
-  textEntered = target.value;                    // Value of that element
-  noteName.textContent = textEntered;            // Update note text
-}
-
-
-function recorderControls(e) {                   // Declare recorderControls()
-  if (!e) {                                      // If event object not present
-    e = window.event;                            // Use IE5-8 fallback
-  }
-  target = e.target || e.srcElement;             // Get the target element
-  if (e.preventDefault) {                        // If preventDefault() supported
-    e.preventDefault();                          // Stop default action
-  } else {                                       // Otherwise
-    e.returnValue = false;                       // IE fallback: stop default action
-  }
-
-  switch(target.getAttribute('data-state')) {    // Get the data-state attribute
-    case 'record':                               // If its value is record
-      record(target);                            // Call the record() function
-      break;                                     // Exit function to where called
-    case 'stop':                                 // If its value is stop
-      stop(target);                              // Call the stop() function
-      break;                                     // Exit function to where called
-      // More buttons could go here...
-  }
-}
-
-function record(target) {                        // Declare function
-  target.setAttribute('data-state', 'stop');     // Set data-state attr to stop
-  target.textContent = 'stop';                   // Set text to 'stop'
-}
-
-function stop(target) {
-  target.setAttribute('data-state', 'record');   //Set data-state attr to record
-  target.textContent = 'record';                 // Set text to 'record'
-}
-
-if (document.addEventListener) {                 // If event listener supported
-  document.addEventListener('click', function(e) {// For any click document
-    recorderControls(e);                         // Call recorderControls()
-  }, false);                                     // Capture during bubble phase
-  // If input event fires on noteInput input call writeLabel()
-  noteInput.addEventListener('input', writeLabel, false); 
-} else {                                         // Otherwise
-  document.attachEvent('onclick', function(e) {  // IE fallback: any click
-    recorderControls(e);                         // Calls recorderControls()
+  $('li').hide().each(function(index) {          // Hide list items
+    $(this).delay(450 * index).fadeIn(1600);     // Then fade them in
   });
- // If keyup event fires on noteInput call writeLabel()
-  noteInput.attachEvent('onkeyup', writeLabel);
-}
+
+  // ITEM COUNTER
+  function updateCount() {                       // Create function to update counter
+    var items = $('li[class!=complete]').length; // Number of items in list
+    $('#counter').text(items);                   // Added into counter circle
+  }
+  updateCount();                                 // Call the function
+
+  // SETUP FORM FOR NEW ITEMS
+  $newItemButton.show();                         // Show the button
+  $newItemForm.hide();                           // Hide the form
+  $('#showForm').on('click', function() {        // When click on add item button
+    $newItemButton.hide();                       // Hide the button
+    $newItemForm.show();                         // Show the form
+  });
+
+  // ADDING A NEW LIST ITEM
+  $newItemForm.on('submit', function(e) {       // When a new item is submitted
+    e.preventDefault();                         // Prevent form being submitted
+    var text = $('input:text').val();           // Get value of text input
+    $list.append('<li>' + text + '</li>');      // Add item to end of the list
+    $('input:text').val('');                    // Empty the text input
+    updateCount();                              // Update the count
+  });
+
+  // CLICK HANDLING - USES DELEGATION ON <ul> ELEMENT
+  $list.on('click', 'li', function() {
+    var $this = $(this);               // Cache the element in a jQuery object
+    var complete = $this.hasClass('complete');  // Is item complete
+
+    if (complete === true) {           // Check if item is complete
+      $this.animate({                  // If so, animate opacity + padding
+        opacity: 0.0,
+        paddingLeft: '+=180'
+      }, 500, 'swing', function() {    // Use callback when animation completes
+        $this.remove();                // Then completely remove this item
+      });
+    } else {                           // Otherwise indicate it is complete
+      item = $this.text();             // Get the text from the list item
+      $this.remove();                  // Remove the list item
+      $list                            // Add back to end of list as complete
+        .append('<li class=\"complete\">' + item + '</li>')
+        .hide().fadeIn(300);           // Hide it so it can be faded in
+      updateCount();                   // Update the counter
+    }                                  // End of else option
+  });                                  // End of event handler
+
+});
