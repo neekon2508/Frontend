@@ -44,7 +44,9 @@ const App = () => {
         My Hacker Stories
       </h1>
 
-      <InputWithLabel id="search" label="Search" value={searchTerm} onInputChange={handleSearch} />
+      <InputWithLabel id="search" value={searchTerm} onInputChange={handleSearch} isFocused>
+        <strong>Search:</strong>
+      </InputWithLabel>
 
       <hr />
 
@@ -55,28 +57,38 @@ const App = () => {
   
 const List = ({ list }) => (
   <ul>
-    {list.map((item) => (
-    <Item key={item.objectID} item={item} />
+    {list.map(({objectID, ...item}) => (//Rest operation
+    <Item key={objectID} {...item} /> //Spread operation
     ))}
   </ul>
   );
-const Item = ({ item }) => (
+  const Item = ({ title, url, author, num_comments, points}) => (
   <li>
     <span>
-      <a href={item.url}>{item.title}</a>
+      <a href={url}>{title}</a>
     </span>
-    <span>{item.author}</span>
-    <span>{item.num_comments}</span>
-    <span>{item.points}</span>
+    <span>{author}</span>
+    <span>{num_comments}</span>
+    <span>{points}</span>
   </li>
   );
   
-const InputWithLabel = ({ id, label, value, type='text', onInputChange}) => (
-  <>
-    <label htmlFor="id">{label}</label>
-    &nbsp;
-    <input type={type} id={id} value={value} onChange={onInputChange} />
-  </>
-);
+const InputWithLabel = ({ id, label, value, type='text', onInputChange, children, isFocused}) => {
+
+  //A
+  const inputRef = React.useRef();
+  //C
+  React.useEffect(() => {
+    if (isFocused && inputRef.current)
+      //D
+      inputRef.current.focus()
+  }, [isFocused])
+  return (<>
+    <label htmlFor="id">{children}</label>
+    &nbsp; {/*B*/}
+    <input ref={inputRef} type={type} id={id} value={value} onChange={onInputChange} autoFocus={isFocused}/>
+  </>)
+}
+  
 
 export default App;
