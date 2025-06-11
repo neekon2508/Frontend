@@ -3,7 +3,7 @@ import * as React from 'react';
 
 const App = () => {
 
-  const stories = [
+  const initialStories = [
     {
       title: 'React',
       url: 'https://reactjs.org/',
@@ -21,10 +21,52 @@ const App = () => {
       objectID: 1,
     },
   ];
+  const getAsyncStories = () => 
+   new Promise(resolve =>
+    setTimeout(()=>resolve({data:{stories: initialStories}}), 2000)
+  )
 
+  const storiesReducer = (state,action) => {
+    switch (action.type) {
+      case 'SET_STORIES':
+        return action.payload
+      case 'REMOVE_STORY':
+        return state.filter(
+          (story) => action.payload.objectID !== story.objectID
+        )
+      default:
+        throw new Error()
+    }
+  }
   const [searchTerm, setSearchTerm] = React.useState(
     localStorage.getItem('search') || 'React'
   );
+  // const [stories, setStories] = React.useState([])
+  const [stories, dispatchStories] = React.useReducer(
+    storiesReducer, []
+  )
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [isError, setIsError] = React.useState(false);
+  React.useEffect(() => {
+    setIsLoading(true)
+    getAsyncStories().then(result => {
+      dispatchStories({
+        type: 'SET_STORIES',
+        payload: result.data.stories,
+      })
+      setIsLoading(false)
+    })
+    .catch(()=>setIsError(true))
+  }, [])
+  const handleRemoveStory = (item)=> {
+    const newStories = stories.filter(
+      story => item.objectID !== story.objectID
+    )
+    dispatchStories({
+      type: 'SET_STORIES',
+      payload: newStories
+    })
+  }
 
   React.useEffect(() => {
     localStorage.setItem('search', searchTerm);
@@ -49,29 +91,49 @@ const App = () => {
       </InputWithLabel>
 
       <hr />
+      {isError && <p>Something went wrong ...</p>}
 
-      <List list={searchedStories} />
+      {isLoading ? (
+        <p>Loading...</p>
+      ): (
+        <List 
+          list={searchedStories}
+          onRemoveItem={handleRemoveStory}/>
+      )}
     </div>
   );
 };
   
-const List = ({ list }) => (
+const List = ({ list, onRemoveItem}) => (
   <ul>
-    {list.map(({objectID, ...item}) => (//Rest operation
-    <Item key={objectID} {...item} /> //Spread operation
+    {list.map((item) => (//Rest operation
+    <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem}/> //Spread operation
     ))}
   </ul>
   );
-  const Item = ({ title, url, author, num_comments, points}) => (
-  <li>
+  const Item = ({item, onRemoveItem}) => {
+
+    const handleRemoveItem = () => {
+      onRemoveItem(item)
+    }
+    return (
+    <li>
     <span>
-      <a href={url}>{title}</a>
+      <a href={item.url}>{item.title}</a>
     </span>
-    <span>{author}</span>
-    <span>{num_comments}</span>
-    <span>{points}</span>
+    <span>{item.author}</span>
+    <span>{item.num_comments}</span>
+    <span>{item.points}</span>
+    <span>
+       <button type="button" onClick={() => onRemoveItem(item)}>
+        Dismiss
+       </button>
+    </span>
   </li>
-  );
+    )
+  }
+  
+  
   
 const InputWithLabel = ({ id, label, value, type='text', onInputChange, children, isFocused}) => {
 
@@ -86,7 +148,7 @@ const InputWithLabel = ({ id, label, value, type='text', onInputChange, children
   return (<>
     <label htmlFor="id">{children}</label>
     &nbsp; {/*B*/}
-    <input ref={inputRef} type={type} id={id} value={value} onChange={onInputChange} autoFocus={isFocused}/>
+    <input ref={inputRef} type={type} id={id} value={value} onChange={onInputChange}/>
   </>)
 }
   
