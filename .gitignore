@@ -1,2 +1,4 @@
-1.HTML_CSS/~$2_CSS.docx
-2.JavaScript_Jquery/~$CoreConcepts.docx
+3.React/RoadToReact/node_modules
+3.React/RoadToReact/hacker-stories/node_modules
+build/
+.env
