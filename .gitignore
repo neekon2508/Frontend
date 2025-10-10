@@ -1,4 +1,3 @@
-3.React/RoadToReact/node_modules
-3.React/RoadToReact/hacker-stories/node_modules
+node_modules/
 build/
 .env

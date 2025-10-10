@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test JavaScript</title>
+  </head>
+  <body>
+    <div id="info"></div>
+    <div id="footer"></div>
+    <script>
+      var msg = "<p><b>page title: </b>" + document.title + "<br />";
+      msg += "<b>page address: </b>" + document.URL + "<br />";
+      msg += "<b>last modified: </b>" + document.lastModified + "</ p>";
+      var el = document.getElementById("footer");
+      el.innerHTML = msg;
+    </script>
+  </body>
+</html>
