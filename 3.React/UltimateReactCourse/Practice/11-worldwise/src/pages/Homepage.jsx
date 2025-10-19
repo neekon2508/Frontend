@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import styles from "./Homepage.module.css";
 
@@ -15,6 +16,9 @@ export default function Homepage() {
           A world map that tracks your footsteps into every city you can think
           of. Never forget your wonderful experiences, and show your friends how
           you have wandered the world.
+        </h2>
+        <h2>
+          <NavLink to="app">Start tracking now</NavLink>
         </h2>
       </section>
     </main>
