@@ -12,7 +12,7 @@ export default function LinkButton({ children, to }) {
     );
 
   return (
-    <Link to="{to}" className={className}>
+    <Link to={to} className={className}>
       {children}
     </Link>
   );
