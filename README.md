@@ -25,10 +25,14 @@ src/
 │ │ ├── Modal/
 │ │ └── Spinner/
 │ └── common/ # component ghép từ nhiều ui, dùng ≥ 2 nơi
-│ ├── DataTable/
-│ ├── SearchBox/
-│ └── ConfirmDialog/
+│   ├── DataTable/
+│   ├── SearchBox/
+│   └── ConfirmDialog/
 │
+├── config/                  # ⭐ MỚI — tách riêng khỏi constants/ và lib/
+│   ├── env.ts
+│   ├── app.config.ts
+│   └── featureFlags.ts
 ├── hooks/ # custom hooks dùng chung, KHÔNG chứa API call
 │ ├── useDebounce.ts
 │ ├── useClickOutside.ts
@@ -79,7 +83,7 @@ src/
 │ │ ├── store/
 │ │ │ └── userStore.ts # Zustand store riêng (nếu cần state ngoài server-state)
 │ │ └── schema/
-│ │ └── userForm.schema.ts # Zod/Yup schema cho React Hook Form
+│ │     └── userForm.schema.ts # Zod/Yup schema cho React Hook Form
 │ └── auth/
 │ ├── hooks/
 │ │ └── useLoginMutation.ts
@@ -95,18 +99,18 @@ src/
 │ ├── themeStore.ts
 │ └── uiStore.ts # modal, toast, sidebar state...
 │
-├── lib/ # cấu hình thư viện third-party
-│ ├── queryClient.ts # new QueryClient(...)
-│ └── zod.ts # config chung nếu có
+├── lib/                     # khởi tạo instance thư viện, DÙNG config/
+│   ├── axiosClient.ts
+│   └── queryClient.ts
 │
 ├── utils/
 │ ├── formatDate.ts
 │ ├── formatCurrency.ts
 │ └── validate.ts
 │
-├── constants/
-│ ├── env.ts
-│ └── config.ts
+├── constants/                 # giờ chỉ còn hằng số KHÔNG liên quan cấu hình
+│   ├── routePaths.ts             # (có thể gộp vào routes/ cũng được)
+│   └── messages.ts               # message lỗi, text cố định
 │
 ├── styles/
 │ └── globals.css # @tailwind base/components/utilities + custom CSS variable
